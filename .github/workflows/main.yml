@@ -2,7 +2,7 @@ name: CI
 
 on:
   release:
-    types: [published, created, edited, prereleased]
+    types: [published, prereleased]
 jobs:
   build:
 
