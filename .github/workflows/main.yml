@@ -10,11 +10,16 @@ jobs:
 
     steps:
     - name: Run a one-line script
+      id: version
       run: |
-        echo $GITHUB_REF
         echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
         echo ${GITHUB_REF:10} > version.txt
-    - run: |
-        pwd
-        cat version.txt
       
+    - name: Check output
+      env:
+        RELEASE_VERSION: ${{ steps.version.outputs.tag }}
+      run: |
+        echo $RELEASE_VERSION
+        echo ${{ steps.version.outputs.tag }}
+
+
