@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
     - name: Run a one-line script
       id: version
       run: |
@@ -20,9 +19,6 @@ jobs:
       env:
         RELEASE_VERSION: ${{ steps.version.outputs.tag }}
       run: |
-        echo $RELEASE_VERSION
-        echo ${{ steps.version.outputs.tag }}
         pwd
         ls -al
         
-
