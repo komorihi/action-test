@@ -21,5 +21,7 @@ jobs:
       run: |
         echo $RELEASE_VERSION
         echo ${{ steps.version.outputs.tag }}
-
+        pwd
+        ls
+        
 
