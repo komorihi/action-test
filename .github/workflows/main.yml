@@ -10,4 +10,11 @@ jobs:
 
     steps:
     - name: Run a one-line script
-      run: echo $GITHUB_REF
+      run: |
+        echo $GITHUB_REF
+        echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+        echo ${GITHUB_REF:10} > version.txt
+    - run: |
+        pwd
+        cat version.txt
+      
