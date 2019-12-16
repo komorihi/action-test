@@ -22,4 +22,4 @@ jobs:
         pwd
         ls -al
         echo ${{ github.repository }}
-        echo ${{ github.ref }}
+        echo ${{ github.ref:10 }}
