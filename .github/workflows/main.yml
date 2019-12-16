@@ -14,12 +14,5 @@ jobs:
       run: |
         echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
         echo ${GITHUB_REF:10} > version.txt
-      
-    - name: Check output
-      env:
-        RELEASE_VERSION: ${{ steps.version.outputs.tag }}
-      run: |
-        pwd
-        ls -al
-        echo ${{ github.repository }}
-        echo ${{ github.ref:10 }}
+        which jq
+        curl "https://api.github.com/repos/${{ github.repository }}/releases/tags/${GITHUB_REF:10}"              
