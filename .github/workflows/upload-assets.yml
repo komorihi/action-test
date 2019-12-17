@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@master
       - name: Set variables
         id: setenv
         run: |
@@ -18,13 +18,22 @@ jobs:
       - name: Create archive
         run: zip readme.zip ./README.md 
       - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.setenv.outputs.upload_url }}
-          asset_path: ./readme.zip
-          asset_name: readme.zip
-          asset_content_type: application/zip
+        run: |
+          FILE = readme.zip
+          echo $FILE
+          curl \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Content-Type: $(file -b --mime-type $FILE)" \
+          --data-binary @$FILE \
+          "https://uploads.github.com/repos/hubot/singularity/releases/123/assets?name=$(basename $FILE)"
+    
+        # id: upload-release-asset 
+        # uses: actions/upload-release-asset@v1.0.1
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # with:
+        #   upload_url: ${{ steps.setenv.outputs.upload_url }}
+        #   asset_path: ./readme.zip
+        #   asset_name: readme.zip
+        #   asset_content_type: application/zip
 
