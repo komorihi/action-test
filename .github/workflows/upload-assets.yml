@@ -22,7 +22,7 @@ jobs:
           echo ${{ steps.setenv.outputs.upload_url }}
       - name: Upload Release Asset
         run: |
-          FILE = readme.zip
+          set FILE=readme.zip
           echo $FILE
           curl \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
