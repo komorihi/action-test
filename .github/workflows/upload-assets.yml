@@ -14,7 +14,7 @@ jobs:
         run: |
           echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
           echo ${GITHUB_REF:10} > version.txt
-          echo ::set-output name=upload_url::$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}" | jq ".upload_url")
+          echo ::set-output name=upload_url::$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}" | jq ".upload_url") | sed -En "s/\{\?name\,label\}/x/p"
       - name: Create archive
         run: |
           zip readme.zip ./README.md 
@@ -28,7 +28,7 @@ jobs:
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -H "Content-Type: $(file -b --mime-type $FILE)" \
           --data-binary @$FILE \
-          "https://uploads.github.com/repos/hubot/singularity/releases/123/assets?name=$(basename $FILE)"
+          "${{ steps.setenv.outputs.upload_url }}?name=$(basename $FILE)"
     
         # id: upload-release-asset 
         # uses: actions/upload-release-asset@v1.0.1
