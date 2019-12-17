@@ -14,7 +14,7 @@ jobs:
         run: |
           echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
           echo ${GITHUB_REF:10} > version.txt
-          echo ::set-output name=upload_url::$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}" | jq ".upload_url") | sed -En "s/\{\?name\,label\}/x/p"
+          echo ::set-output name=upload_url::$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}" | jq ".upload_url") | sed -En "s/\{\?name\,label\}//p"
       - name: Create archive
         run: |
           zip readme.zip ./README.md 
