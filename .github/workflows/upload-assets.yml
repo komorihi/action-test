@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: 
+      - name: Set variables
         id: setenv
         run: |
           echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
@@ -26,3 +26,4 @@ jobs:
           asset_path: ./README.md
           asset_name: README.md
           asset_content_type: application/text
+
