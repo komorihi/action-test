@@ -16,6 +16,6 @@ jobs:
       - name: Create Release
         id: create_release
         run: |
-          npm install github-release-notes -g
+          npm install github-release-notes
           gren release --token=${{ secrets.GITHUB_TOKEN }}
 
