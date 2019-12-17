@@ -17,5 +17,13 @@ jobs:
         id: create_release
         run: |
           npm install github-release-notes
-          gren release --token=${{ secrets.GITHUB_TOKEN }}
+          echo
+          ls -al
+          echo
+          ls -al ..
+          echo
+          ls -al ../..
+          echo
+          ls -al ../..
+          # gren release --token=${{ secrets.GITHUB_TOKEN }}
 
