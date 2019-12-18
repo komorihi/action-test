@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  build:
+  mac:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@master
@@ -17,26 +17,45 @@ jobs:
           echo ::set-output name=upload_url::$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}" | jq ".upload_url") | sed -En "s/\{\?name\,label\}//p"
       - name: Create archive
         run: |
-          zip readme.zip ./README.md 
+          tar -cvzf readme.tar.gz ./README.md 
           ls -al
           echo ${{ steps.setenv.outputs.upload_url }}
       - name: Upload Release Asset
         run: |
-          export FILE=readme.zip
+          export FILE=readme.tar.gz
           echo $FILE
           curl \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -H "Content-Type: $(file -b --mime-type $FILE)" \
           --data-binary @$FILE \
           "${{ steps.setenv.outputs.upload_url }}?name=$(basename $FILE)"
-          
-        # id: upload-release-asset 
-        # uses: actions/upload-release-asset@v1.0.1
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # with:
-        #   upload_url: ${{ steps.setenv.outputs.upload_url }}
-        #   asset_path: ./readme.zip
-        #   asset_name: readme.zip
-        #   asset_content_type: application/zip
-
+  
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set variables
+        id: setenv
+        run: |
+          $ref = $env:GITHUB_REF.SubString(10)
+          echo ::set-output name=tag::$ref
+          echo $ref > version.txt
+          $res = Invoke-RestMethod -Uri https://api.github.com/repos/$env.GITHUB_REPOSITORY/releases/tags/$ref -Method Get
+          $uri = $res.upload_url.Replace("{?name,label}", "")
+          echo ::set-output name=upload_url::$uri
+      - name: Create archive
+        run: |
+        Compress-Archive -Path ./README.md -DestinationPath readme.zip 
+          ls -al
+          echo ${{ steps.setenv.outputs.upload_url }}
+      - name: Upload Release Asset
+        run: |
+          $FILE = "readme.zip"
+          $headers = @{}
+          $headers.Add("Authorization", "token ${{ secrets.GITHUB_TOKEN }}")
+          $headers.Add("Content-Type", [System.Web.MimeMapping]::GetMimeMapping($FILE))
+          Invoke-RestMethod \
+          -Method Post \
+          -Headers $headers
+          -InFile $FILE \
+          -Uri "${{ steps.setenv.outputs.upload_url }}?name=$((Get-ChildItem $FILE).BaseName)"

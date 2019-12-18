@@ -23,7 +23,7 @@ jobs:
         run: |
           ls -al
           echo =======================
-          ls -al node_modules/github-release-notes
+          ls -al node_modules/github-release-notes/bin
           echo =======================
           ls -al ../../..
 
