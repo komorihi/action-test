@@ -65,8 +65,4 @@ jobs:
           $name = (Get-ChildItem $FILE).Name
           echo $name
           echo "${{ steps.setenv.outputs.upload_url }}?name=$name"
-          Invoke-RestMethod \
-          -Uri "${{ steps.setenv.outputs.upload_url }}?name=$name" \
-          -Method Post \
-          -Headers $headers \
-          -InFile $FILE
+          Invoke-RestMethod -Uri ${{ steps.setenv.outputs.upload_url }}?name=$name -Method Post -Headers $headers -InFile $FILE
