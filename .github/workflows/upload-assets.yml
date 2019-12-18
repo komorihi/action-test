@@ -15,7 +15,7 @@ jobs:
           echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
           echo ${GITHUB_REF:10} > version.txt
           echo "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}"
-          export res="https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}"
+          export res=$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}")
           echo $res
           export url=$(echo $res | jq ".upload_url" | sed -En "s/\{\?name\,label\}//p")
           echo $url
