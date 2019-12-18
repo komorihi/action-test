@@ -49,11 +49,12 @@ jobs:
           echo https://api.github.com/repos/${{ github.repository }}/releases/tags/$ref
           $res = Invoke-RestMethod -Uri https://api.github.com/repos/${{ github.repository }}/releases/tags/$ref -Method Get
           $uri = $res.upload_url.Replace("{?name,label}", "")
-          echo ::set-output name=upload_url::$uri
+          echo ::set-output name=upload_url::`"$uri`"
       - name: Create archive
         run: |
           Compress-Archive -Path ./README.md -DestinationPath readme.zip 
           ls
+          echo ${{ steps.setenv.outputs.tag }}
           echo ${{ steps.setenv.outputs.upload_url }}
       - name: Upload Release Asset
         run: |
