@@ -17,13 +17,16 @@ jobs:
         id: create_release
         run: |
           npm install github-release-notes
-          echo
+      - name: Check directory
+        run: |
+          echo =======================
           ls -al
-          echo
+          echo =======================
           ls -al ..
-          echo
+          echo =======================
           ls -al ../..
-          echo
+          echo =======================
           ls -al ../..
-          # gren release --token=${{ secrets.GITHUB_TOKEN }}
+
+        # gren release --token=${{ secrets.GITHUB_TOKEN }}
 
