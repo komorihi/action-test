@@ -14,11 +14,14 @@ jobs:
         run: |
           echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
           echo ${GITHUB_REF:10} > version.txt
-          echo ::set-output name=upload_url::$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}" | jq ".upload_url") | sed -En "s/\{\?name\,label\}//p"
+          export url=$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}" | jq ".upload_url" | sed -En "s/\{\?name\,label\}//p")
+          echo $url
+          echo ::set-output name=upload_url::"$url"
       - name: Create archive
         run: |
           tar -cvzf readme.tar.gz ./README.md 
           ls -al
+          echo ${{ steps.setenv.outputs.tag }}
           echo ${{ steps.setenv.outputs.upload_url }}
       - name: Upload Release Asset
         run: |
@@ -38,9 +41,9 @@ jobs:
         id: setenv2
         run: |
           $ref = $env:GITHUB_REF.SubString(10)
-          echo ::set-output name=tag::$ref
+          echo "::set-output name=tag::$ref"
           echo $ref > version.txt
-          $res = Invoke-RestMethod -Uri https://api.github.com/repos/$env.GITHUB_REPOSITORY/releases/tags/$ref -Method Get
+          $res = Invoke-RestMethod -Uri https://api.github.com/repos/$($env.GITHUB_REPOSITORY)/releases/tags/$ref -Method Get
           $uri = $res.upload_url.Replace("{?name,label}", "")
           echo ::set-output name=upload_url::$uri
       - name: Create archive
