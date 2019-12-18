@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Set variables
-        id: setenv2
+        id: setenv
         run: |
           $ref = $env:GITHUB_REF.SubString(10)
           echo "::set-output name=tag::$ref"
