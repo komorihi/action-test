@@ -45,8 +45,8 @@ jobs:
           echo ::set-output name=upload_url::$uri
       - name: Create archive
         run: |
-        Compress-Archive -Path ./README.md -DestinationPath readme.zip 
-          ls -al
+          Compress-Archive -Path ./README.md -DestinationPath readme.zip 
+          ls
           echo ${{ steps.setenv.outputs.upload_url }}
       - name: Upload Release Asset
         run: |
