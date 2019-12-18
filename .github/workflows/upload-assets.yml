@@ -62,8 +62,9 @@ jobs:
           $headers = @{}
           $headers.Add("Authorization", "token ${{ secrets.GITHUB_TOKEN }}")
           $headers.Add("Content-Type", "application/zip")
+          $basename = (Get-ChildItem $FILE).BaseName
           Invoke-RestMethod \
           -Method Post \
           -Headers $headers \
           -InFile $FILE \
-          -Uri "${{ steps.setenv.outputs.upload_url }}?name=$((Get-ChildItem $FILE).BaseName)"
+          -Uri "${{ steps.setenv.outputs.upload_url }}?name=$basename"
