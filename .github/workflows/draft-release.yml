@@ -1,8 +1,10 @@
-on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+# on:
+#   push:
+#     # Sequence of patterns matched against refs/tags
+#     tags:
+#       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+on: [push]
 
 name: Create Release
 
@@ -19,14 +21,13 @@ jobs:
           npm install github-release-notes
       - name: Check directory
         run: |
-          echo =======================
           ls -al
           echo =======================
-          ls -al ..
+          ls -al node_modules
           echo =======================
           ls -al ../..
           echo =======================
-          ls -al ../..
+          ls -al ../../..
 
         # gren release --token=${{ secrets.GITHUB_TOKEN }}
 
