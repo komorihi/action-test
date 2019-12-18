@@ -14,6 +14,8 @@ jobs:
         run: |
           echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
           echo ${GITHUB_REF:10} > version.txt
+          echo "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}"
+          curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}"
           export url=$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}" | jq ".upload_url" | sed -En "s/\{\?name\,label\}//p")
           echo $url
           echo ::set-output name=upload_url::"$url"
@@ -43,7 +45,8 @@ jobs:
           $ref = $env:GITHUB_REF.SubString(10)
           echo "::set-output name=tag::$ref"
           echo $ref > version.txt
-          $res = Invoke-RestMethod -Uri https://api.github.com/repos/$($env.GITHUB_REPOSITORY)/releases/tags/$ref -Method Get
+          echo https://api.github.com/repos/${{ github.repository }}/releases/tags/$ref
+          $res = Invoke-RestMethod -Uri https://api.github.com/repos/${{ github.repository }}/releases/tags/$ref -Method Get
           $uri = $res.upload_url.Replace("{?name,label}", "")
           echo ::set-output name=upload_url::$uri
       - name: Create archive
