@@ -20,6 +20,5 @@ jobs:
         run: |
           npm install github-release-notes
           export PATH=$PATH:./node_modules/.bin
-          gren changelog --override
-          gren release --token=${{ secrets.GITHUB_TOKEN }} --override
+          gren release --token=${{ secrets.GITHUB_TOKEN }} --generate --override
 
