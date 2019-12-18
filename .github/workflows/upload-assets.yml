@@ -64,6 +64,6 @@ jobs:
           $headers.Add("Content-Type", "application/zip")
           Invoke-RestMethod \
           -Method Post \
-          -Headers $headers
+          -Headers $headers \
           -InFile $FILE \
           -Uri "${{ steps.setenv.outputs.upload_url }}?name=$((Get-ChildItem $FILE).BaseName)"
