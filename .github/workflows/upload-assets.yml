@@ -5,36 +5,36 @@ on:
     types: [published]
 
 jobs:
-  mac:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Set variables
-        id: setenv
-        run: |
-          echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
-          echo ${GITHUB_REF:10} > version.txt
-          echo "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}"
-          export res=$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}")
-          echo $res
-          export url=$(echo $res | jq ".upload_url" | sed -En "s/\{\?name\,label\}//p")
-          echo $url
-          echo ::set-output name=upload_url::"$url"
-      - name: Create archive
-        run: |
-          tar -cvzf readme.tar.gz ./README.md 
-          ls -al
-          echo ${{ steps.setenv.outputs.tag }}
-          echo ${{ steps.setenv.outputs.upload_url }}
-      - name: Upload Release Asset
-        run: |
-          export FILE=readme.tar.gz
-          echo $FILE
-          curl \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -H "Content-Type: $(file -b --mime-type $FILE)" \
-          --data-binary @$FILE \
-          "${{ steps.setenv.outputs.upload_url }}?name=$(basename $FILE)"
+  # mac:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - name: Set variables
+  #       id: setenv
+  #       run: |
+  #         echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+  #         echo ${GITHUB_REF:10} > version.txt
+  #         echo "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}"
+  #         export res=$(curl "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF:10}")
+  #         echo $res
+  #         export url=$(echo $res | jq ".upload_url" | sed -En "s/\{\?name\,label\}//p")
+  #         echo $url
+  #         echo ::set-output name=upload_url::"$url"
+  #     - name: Create archive
+  #       run: |
+  #         tar -cvzf readme.tar.gz ./README.md 
+  #         ls -al
+  #         echo ${{ steps.setenv.outputs.tag }}
+  #         echo ${{ steps.setenv.outputs.upload_url }}
+  #     - name: Upload Release Asset
+  #       run: |
+  #         export FILE=readme.tar.gz
+  #         echo $FILE
+  #         curl \
+  #         -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+  #         -H "Content-Type: $(file -b --mime-type $FILE)" \
+  #         --data-binary @$FILE \
+  #         "${{ steps.setenv.outputs.upload_url }}?name=$(basename $FILE)"
   
   windows:
     runs-on: windows-latest
@@ -61,7 +61,7 @@ jobs:
           $FILE = "readme.zip"
           $headers = @{}
           $headers.Add("Authorization", "token ${{ secrets.GITHUB_TOKEN }}")
-          $headers.Add("Content-Type", [System.Web.MimeMapping]::GetMimeMapping($FILE))
+          $headers.Add("Content-Type", "application/zip")
           Invoke-RestMethod \
           -Method Post \
           -Headers $headers
